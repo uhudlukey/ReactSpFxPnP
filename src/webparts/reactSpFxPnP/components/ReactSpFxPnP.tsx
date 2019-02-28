@@ -46,8 +46,8 @@ export default class ReactSpFxPnP extends React.Component<IReactSpFxPnPProps, {}
               </div>
               <div className="ms-Grid-col ms-u-sm12 block">
                 <TaxonomyPicker
-                  allowMultipleSelections={true}
-                  termsetNameOrID="Countries"
+                  allowMultipleSelections={false}
+                  termsetNameOrID="Schools and Services"
                   panelTitle="Select Term"
                   label="Taxonomy Picker"
                   context={this.props.context}
