@@ -106,6 +106,7 @@ export default class ReactSpFxPnP extends React.Component<IReactSpFxPnPProps, IR
               </div>
               <div className="ms-Grid-col ms-u-sm8 block">
                 <PeoplePicker
+                  
                   context={this.props.context}
                   personSelectionLimit={3}
                   groupName={""} // Leave this blank in case you want to filter from all users
@@ -114,16 +115,22 @@ export default class ReactSpFxPnP extends React.Component<IReactSpFxPnPProps, IR
                   disabled={false}
                   selectedItems={this._getPeoplePickerItems} />
               </div>
+              <div className="ms-Grid-col ms-u-sm4 block">
+                <label className="ms-Label">Academic Lead</label>
+              </div>
               <div className="ms-Grid-col ms-u-sm8 block">
                 <PeoplePicker
                   context={this.props.context}
-                  titleText="Academic Lead"
+                  // titleText="Academic Lead"
                   personSelectionLimit={3}
                   groupName={""} // Leave this blank in case you want to filter from all users
                   showtooltip={true}
                   isRequired={true}
                   disabled={false}
                   selectedItems={this._getPeoplePickerItems} />
+              </div>
+              <div className="ms-Grid-col ms-u-sm4 block">
+                <label className="ms-Label">School or Service</label>
               </div>
               <div className="ms-Grid-col ms-u-sm12 block">
                 <TaxonomyPicker
