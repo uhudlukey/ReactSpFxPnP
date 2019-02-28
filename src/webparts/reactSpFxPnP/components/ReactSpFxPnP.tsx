@@ -34,18 +34,79 @@ import { TaxonomyPicker, IPickerTerms } from "@pnp/spfx-controls-react/lib/Taxon
 import { PeoplePicker } from "@pnp/spfx-controls-react/lib/PeoplePicker";
 import { TextField } from 'office-ui-fabric-react/lib/TextField';
 import { Toggle } from 'office-ui-fabric-react/lib/Toggle';
+import { IReactSpFxPnP } from './IReactSpFxPnP';
+import { default as pnp, ItemAddResult } from "sp-pnp-js";
+import { Dialog, DialogType, DialogFooter } from 'office-ui-fabric-react/lib/Dialog';
+import { PrimaryButton, DefaultButton } from 'office-ui-fabric-react/lib/components/Button';
+import { FieldUserRenderer } from "@pnp/spfx-controls-react/lib/FieldUserRenderer";
+import { ChoiceGroup, IChoiceGroupOption } from 'office-ui-fabric-react/lib/ChoiceGroup';
+import { FieldRendererHelper } from '@pnp/spfx-controls-react/lib/Utilities';
+import { Dropdown, IDropdown, DropdownMenuItemType, IDropdownOption } from 'office-ui-fabric-react/lib/Dropdown';
+import { Checkbox } from 'office-ui-fabric-react/lib/Checkbox';
+import { Panel, PanelType } from 'office-ui-fabric-react/lib/Panel';
+import {
+  assign,
+  autobind
+} from 'office-ui-fabric-react/lib/Utilities';
 
-export default class ReactSpFxPnP extends React.Component<IReactSpFxPnPProps, {}> {
+
+export default class ReactSpFxPnP extends React.Component<IReactSpFxPnPProps, IReactSpFxPnP> {
+  constructor() {   
+    super();
+    this.handleTitle = this.handleTitle.bind(this);
+    this.handleDesc = this.handleDesc.bind(this);
+    this._onCheckboxChange = this._onCheckboxChange.bind(this);
+    this._onRenderFooterContent = this._onRenderFooterContent.bind(this);
+    this.createItem = this.createItem.bind(this);
+    this.onTaxPickerChange = this.onTaxPickerChange.bind(this);
+    this._getManager = this._getManager.bind(this);
+    this.state = {
+      name:"",
+      description:"",
+      selectedItems: [],
+      hideDialog: true,
+      showPanel: false,
+      dpselectedItem: undefined,
+      dpselectedItems: [],  
+      disableToggle:false,
+      defaultChecked:false,
+      termKey: undefined,
+      userIDs: [],
+      userManagerIDs: [],
+      pplPickerType: "",
+      status:"",
+      isChecked: false,
+      required:"This is required",
+      onSubmission:false,
+      termnCond:false,
+    }
+  }
+
   public render(): React.ReactElement<IReactSpFxPnPProps> {
+    const { dpselectedItem, dpselectedItems } = this.state;
+    const { name, description } = this.state;   
+    pnp.setup({
+        spfxContext: this.props.context
+    });
+
     return (
       <form>
         <div className={styles.reactSpFxPnP}>
           <div className={styles.container}>
             <div className={`ms-Grid-row ms-bgColor-neutralLight ms-fontColor-white ${styles.row}`}>
+              {/* <div className="ms-Grid-col ms-u-sm4 block">
+                <label className="ms-Label">Employee Name</label>             
+              </div>
+              <div className="ms-Grid-col ms-u-sm8 block">
+                <TextField value={this.state.name} required={true} onChanged={this.handleTitle}
+           errorMessage={(this.state.name.length === 0 && this.state.onSubmission === true) ? this.state.required : ""}/>
+              </div> */}
+              <div className="ms-Grid-col ms-u-sm4 block">
+                <label className="ms-Label">Submitter Name</label>
+              </div>
               <div className="ms-Grid-col ms-u-sm8 block">
                 <PeoplePicker
                   context={this.props.context}
-                  titleText="Name"
                   personSelectionLimit={3}
                   groupName={""} // Leave this blank in case you want to filter from all users
                   showtooltip={true}
@@ -88,24 +149,162 @@ export default class ReactSpFxPnP extends React.Component<IReactSpFxPnPProps, {}
                   onText="Yes"
                   offText="No"
                   /></div>
-              <div className="ms-Grid-col ms-u-sm12 block">
-                <TextField
-                  label="Standard"
-                /></div>
-              </div>
+              <Dialog
+                hidden={this.state.hideDialog}
+                onDismiss={this._closeDialog}
+                dialogContentProps={{
+                  type: DialogType.largeHeader,
+                  title: 'Request Submitted Successfully',
+                  subText: "" }}
+                  modalProps={{
+                    titleAriaId: 'myLabelId',
+                    subtitleAriaId: 'mySubTextId',
+                    isBlocking: false,
+                    containerClassName: 'ms-dialogMainOverride'            
+                  }}>
+              <div dangerouslySetInnerHTML={{__html:this.state.status}}/>    
+              <DialogFooter>
+                <PrimaryButton onClick={()=>this.gotoHomePage()} text="Okay" />
+                </DialogFooter>
+              </Dialog>
+            </div>
           </div>
         </div>
       </form>
     );
   }
 
-  private onTaxPickerChange(terms: IPickerTerms) {
+  private _getPeoplePickerItems(items: any[]) {
+    console.log('Items:', items);
+  }
+
+  private onTaxPickerChange(terms : IPickerTerms) {
     this.setState({ termKey: terms[0].key.toString() });
     console.log("Terms", terms);
   }
+ 
+  private _getManager(items: any[]) {
+    this.state.userManagerIDs.length = 0;
+    for (let item in items)
+    {   
+      this.state.userManagerIDs.push(items[item].id);
+      console.log(items[item].id);
+    }
+  }
+ 
+  private _onRenderFooterContent = (): JSX.Element => {
+    return (
+      <div>
+        <PrimaryButton onClick={this.createItem} style={{ marginRight: '8px' }}>
+          Confirm
+        </PrimaryButton>
+        <DefaultButton onClick={this._onClosePanel}>Cancel</DefaultButton>
+      </div>
+    );
+  }
+  
+  private _log(str: string): () => void {
+    return (): void => {
+      console.log(str);
+    };
+  }
+  
+  private _onClosePanel = () => {
+    this.setState({ showPanel: false });
+  }
+  
+  private _onShowPanel = () => {
+    this.setState({ showPanel: true });
+  }
+  
+  private _changeSharing(checked:any):void{
+    this.setState({defaultChecked: checked});
+  }
+  
+  private _changeState = (item: IDropdownOption): void => {
+    console.log('here is the things updating...' + item.key + ' ' + item.text + ' ' + item.selected);
+    this.setState({ dpselectedItem: item });
+    if(item.text == "Employee")
+    {
+      this.setState({defaultChecked: false});
+      this.setState({disableToggle: true});     
+    }
+    else
+    {
+      this.setState({disableToggle:false});
+    }
+  }
+  
+  private handleTitle(value: string): void {
+    return this.setState({
+      name: value
+    });
+  }
+  
+  private handleDesc(value: string): void {
+    return this.setState({
+      description: value
+    });
+  }
+  
+  private _onCheckboxChange(ev: React.FormEvent<HTMLElement>, isChecked: boolean): void {
+    console.log(`The option has been changed to ${isChecked}.`);
+    this.setState({termnCond: (isChecked)?true:false});
+  }
+  
+  private _closeDialog = (): void => {
+    this.setState({ hideDialog: true });
+  }
+  
+  private _showDialog = (status:string): void => {   
+    this.setState({ hideDialog: false });
+    this.setState({ status: status });
+  }
+  
+  private validateForm():void{
+    let allowCreate: boolean = true;
+    this.setState({ onSubmission : true });
 
-  private _getPeoplePickerItems(items: any[]) {
-    console.log('Items:', items);
+    if(this.state.name.length === 0)
+    {
+      allowCreate = false;
+    }
+    if(this.state.termKey === undefined)
+    {
+      allowCreate = false;
+    }   
+
+    if(allowCreate)
+    {
+       this._onShowPanel();
+    }
+    else
+    {
+      //do nothing
+    } 
+  }
+ 
+  private createItem():void { 
+    this._onClosePanel(); 
+    this._showDialog("Submitting Request");
+    console.log(this.state.termKey);
+    pnp.sp.web.lists.getByTitle("Instruction Form").items.add({
+      Title: this.state.name /*,
+      Department: this.state.dpselectedItem.key,
+      Projects: {
+        __metadata: { "type": "SP.Taxonomy.TaxonomyFieldValue" },
+        Label: "1",
+        TermGuid: this.state.termKey,
+        WssId: -1
+      },
+    Reporting_x0020_ManagerId: this.state.userManagerIDs[0] */
+  }).then((iar: ItemAddResult) => {
+      this.setState({ status: "Your request has been submitted sucessfully " });
+  });
+  }
+  
+  private gotoHomePage():void{
+    window.location.replace(this.props.siteUrl);
   }
 
 }

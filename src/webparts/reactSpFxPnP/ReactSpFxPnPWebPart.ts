@@ -22,7 +22,8 @@ export default class ReactSpFxPnPWebPart extends BaseClientSideWebPart<IReactSpF
       ReactSpFxPnP,
       {
       context: this.context,
-      description: this.properties.description
+      description: this.properties.description,
+      siteUrl: this.context.pageContext.web.absoluteUrl,
       }
     );
 
