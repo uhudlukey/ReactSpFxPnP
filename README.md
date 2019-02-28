@@ -22,6 +22,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added SPFX react controls npm install @pnp/spfx-controls-react --save --save-exact
 - Added Office-Fabric-UI
 - Committed to GitHub!
+- Added people picker for Academic Lead
+- Added toggles for 'Instructed Before' and 'Quick Response Required'
+
+### Changed
+
+- Changed order of input elements to be inline with planned form
 
 ---
 # How do I make a good changelog?

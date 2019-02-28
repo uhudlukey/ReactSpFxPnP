@@ -33,6 +33,7 @@ import { IReactSpFxPnPProps } from './IReactSpFxPnPProps';
 import { TaxonomyPicker, IPickerTerms } from "@pnp/spfx-controls-react/lib/TaxonomyPicker";
 import { PeoplePicker } from "@pnp/spfx-controls-react/lib/PeoplePicker";
 import { TextField } from 'office-ui-fabric-react/lib/TextField';
+import { Toggle } from 'office-ui-fabric-react/lib/Toggle';
 
 export default class ReactSpFxPnP extends React.Component<IReactSpFxPnPProps, {}> {
   public render(): React.ReactElement<IReactSpFxPnPProps> {
@@ -41,23 +42,10 @@ export default class ReactSpFxPnP extends React.Component<IReactSpFxPnPProps, {}
         <div className={styles.reactSpFxPnP}>
           <div className={styles.container}>
             <div className={`ms-Grid-row ms-bgColor-neutralLight ms-fontColor-white ${styles.row}`}>
-              <div className="ms-Grid-col ms-u-sm12 block">
-                <TextField label="Standard" />
-              </div>
-              <div className="ms-Grid-col ms-u-sm12 block">
-                <TaxonomyPicker
-                  allowMultipleSelections={false}
-                  termsetNameOrID="Schools and Services"
-                  panelTitle="Select Term"
-                  label="Taxonomy Picker"
-                  context={this.props.context}
-                  onChange={this.onTaxPickerChange}
-                  isTermSetSelectable={false}
-                /></div>
               <div className="ms-Grid-col ms-u-sm8 block">
                 <PeoplePicker
                   context={this.props.context}
-                  titleText="People Picker"
+                  titleText="Name"
                   personSelectionLimit={3}
                   groupName={""} // Leave this blank in case you want to filter from all users
                   showtooltip={true}
@@ -65,7 +53,46 @@ export default class ReactSpFxPnP extends React.Component<IReactSpFxPnPProps, {}
                   disabled={false}
                   selectedItems={this._getPeoplePickerItems} />
               </div>
-            </div>
+              <div className="ms-Grid-col ms-u-sm8 block">
+                <PeoplePicker
+                  context={this.props.context}
+                  titleText="Academic Lead"
+                  personSelectionLimit={3}
+                  groupName={""} // Leave this blank in case you want to filter from all users
+                  showtooltip={true}
+                  isRequired={true}
+                  disabled={false}
+                  selectedItems={this._getPeoplePickerItems} />
+              </div>
+              <div className="ms-Grid-col ms-u-sm12 block">
+                <TaxonomyPicker
+                  allowMultipleSelections={false}
+                  termsetNameOrID="Schools and Services"
+                  panelTitle="Select Term"
+                  label="School or Service"
+                  context={this.props.context}
+                  onChange={this.onTaxPickerChange}
+                  isTermSetSelectable={false}
+                /></div>
+              <div className="ms-Grid-col ms-u-sm12 block">
+                <Toggle
+                  defaultChecked={false}
+                  label="Instructed Before?"
+                  onText="Yes"
+                  offText="No"
+                  /></div>
+              <div className="ms-Grid-col ms-u-sm12 block">
+                <Toggle
+                  defaultChecked={false}
+                  label="Quick response required?"
+                  onText="Yes"
+                  offText="No"
+                  /></div>
+              <div className="ms-Grid-col ms-u-sm12 block">
+                <TextField
+                  label="Standard"
+                /></div>
+              </div>
           </div>
         </div>
       </form>
