@@ -1,4 +1,4 @@
-import { loadTheme } from 'office-ui-fabric-react/lib/Styling';
+/* import { loadTheme } from 'office-ui-fabric-react/lib/Styling';
 
 loadTheme({
   palette: {
@@ -25,7 +25,7 @@ loadTheme({
     black: '#1d1d1d',
     white: '#ffffff',
   }
-});
+}); */
 
 import * as React from 'react';
 import styles from './ReactSpFxPnP.module.scss';
@@ -91,30 +91,37 @@ export default class ReactSpFxPnP extends React.Component<IReactSpFxPnPProps, IR
 
     return (
       <form>
+        {/* TODO:
+
+          - get submit working (the buttons don't even appear?)
+          - fix formatting (colours and layout of labels and input)
+          - add a title 
+         */}  
         <div className={styles.reactSpFxPnP}>
           <div className={styles.container}>
             <div className={`ms-Grid-row ms-bgColor-neutralLight ms-fontColor-white ${styles.row}`}>
-              {/* <div className="ms-Grid-col ms-u-sm4 block">
-                <label className="ms-Label">Employee Name</label>             
+              <div className="ms-Grid-col ms-u-sm4 block">
+                <label className="ms-Label">Title</label>             
               </div>
               <div className="ms-Grid-col ms-u-sm8 block">
-                <TextField value={this.state.name} required={true} onChanged={this.handleTitle}
-           errorMessage={(this.state.name.length === 0 && this.state.onSubmission === true) ? this.state.required : ""}/>
-              </div> */}
+                <TextField
+                  value={this.state.name}
+                  required={true}
+                  onChanged={this.handleTitle}
+                  errorMessage={(this.state.name.length === 0 && this.state.onSubmission === true) ? this.state.required : ""}
+                /></div>
               <div className="ms-Grid-col ms-u-sm4 block">
                 <label className="ms-Label">Submitter Name</label>
               </div>
               <div className="ms-Grid-col ms-u-sm8 block">
                 <PeoplePicker
-                  
                   context={this.props.context}
                   personSelectionLimit={3}
                   groupName={""} // Leave this blank in case you want to filter from all users
                   showtooltip={true}
                   isRequired={true}
                   disabled={false}
-                  selectedItems={this._getPeoplePickerItems} />
-              </div>
+                  selectedItems={this._getPeoplePickerItems} /></div>
               <div className="ms-Grid-col ms-u-sm4 block">
                 <label className="ms-Label">Academic Lead</label>
               </div>
@@ -127,8 +134,7 @@ export default class ReactSpFxPnP extends React.Component<IReactSpFxPnPProps, IR
                   showtooltip={true}
                   isRequired={true}
                   disabled={false}
-                  selectedItems={this._getPeoplePickerItems} />
-              </div>
+                  selectedItems={this._getPeoplePickerItems} /></div>
               <div className="ms-Grid-col ms-u-sm4 block">
                 <label className="ms-Label">School or Service</label>
               </div>
@@ -137,22 +143,38 @@ export default class ReactSpFxPnP extends React.Component<IReactSpFxPnPProps, IR
                   allowMultipleSelections={false}
                   termsetNameOrID="Schools and Services"
                   panelTitle="Select Term"
-                  label="School or Service"
+                  label=""
                   context={this.props.context}
                   onChange={this.onTaxPickerChange}
                   isTermSetSelectable={false}
                 /></div>
+              <div className="ms-Grid-col ms-u-sm4 block">
+                <label className="ms-Label">Instructed Before?</label>
+              </div>
               <div className="ms-Grid-col ms-u-sm12 block">
                 <Toggle
                   defaultChecked={false}
-                  label="Instructed Before?"
+                  // label="Instructed Before?"
                   onText="Yes"
                   offText="No"
                   /></div>
+              <div className="ms-Grid-col ms-u-sm4 block">
+                <label className="ms-Label">Quick Response Required?</label>
+              </div>
               <div className="ms-Grid-col ms-u-sm12 block">
                 <Toggle
                   defaultChecked={false}
-                  label="Quick response required?"
+                  // label="Quick response required?"
+                  onText="Yes"
+                  offText="No"
+                  /></div>
+              <div className="ms-Grid-col ms-u-sm4 block">
+                <label className="ms-Label">Lexcel Assessed?</label>
+              </div>
+              <div className="ms-Grid-col ms-u-sm12 block">
+                <Toggle
+                  defaultChecked={true}
+                  // label="Lexcel Assessed?"
                   onText="Yes"
                   offText="No"
                   /></div>
@@ -171,7 +193,7 @@ export default class ReactSpFxPnP extends React.Component<IReactSpFxPnPProps, IR
                   }}>
               <div dangerouslySetInnerHTML={{__html:this.state.status}}/>    
               <DialogFooter>
-                <PrimaryButton onClick={()=>this.gotoHomePage()} text="Okay" />
+                <PrimaryButton onClick={()=>this.gotoHomePage()} text="OK" />
                 </DialogFooter>
               </Dialog>
             </div>

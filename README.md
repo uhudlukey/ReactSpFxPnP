@@ -12,6 +12,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.2] - 2019-03-01
+
+### Changed
+
+- commented out the theme at the top (I need to grok themes first)
+- added labels in their own DIVs for inputs
+
+### Added 
+
+- Lexcel toggle
+
 ## [0.0.1] - 2019-02-28
 
 ### Changed
@@ -50,30 +61,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Removed** for now removed features.
 - **Fixed** for any bug fixes.
 - **Security** in case of vulnerabilities.
-
-## react-sp-fx-pn-p
-
-This is where you include your WebPart documentation.
-
-### Building the code
-
-```bash
-git clone the repo
-npm i
-npm i -g gulp
-gulp
-```
-
-This package produces the following:
-
-* lib/* - intermediate-stage commonjs build artifacts
-* dist/* - the bundled script, along with other resources
-* deploy/* - all resources which should be uploaded to a CDN.
-
-### Build options
-
-gulp clean - TODO
-gulp test - TODO
-gulp serve - TODO
-gulp bundle - TODO
-gulp package-solution - TODO
