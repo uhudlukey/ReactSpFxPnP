@@ -178,6 +178,26 @@ export default class ReactSpFxPnP extends React.Component<IReactSpFxPnPProps, IR
                   onText="Yes"
                   offText="No"
                   /></div>
+              <div className="ms-Grid-col ms-u-sm6 block">
+              </div>
+              <div className="ms-Grid-col ms-u-sm2 block">
+                <PrimaryButton text="Create" onClick={() => { this.validateForm(); }} />
+              </div>
+              <div className="ms-Grid-col ms-u-sm2 block">
+                <DefaultButton text="Cancel" onClick={() => { this.setState({}); }} />
+              </div>
+              <div>
+                <Panel
+                  isOpen={this.state.showPanel}
+                  type={PanelType.smallFixedFar}
+                  onDismiss={this._onClosePanel}
+                  isFooterAtBottom={false}
+                  headerText="Are you sure you want to submit the form ?"
+                  closeButtonAriaLabel="Close"
+                  onRenderFooterContent={this._onRenderFooterContent}
+                ><span>Please check the details filled and click on Confirm button to submit form.</span>
+                </Panel>
+              </div>
               <Dialog
                 hidden={this.state.hideDialog}
                 onDismiss={this._closeDialog}
