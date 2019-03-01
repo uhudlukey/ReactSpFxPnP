@@ -22,6 +22,11 @@
     @include ms-lgPush1;
   }
 
+  .fontRed {
+    font-size: 11px;
+    color:#a80000;
+  }
+
   .title {
     @include ms-font-xl;
     @include ms-fontColor-white;
@@ -35,6 +40,10 @@
   .description {
     @include ms-font-l;
     @include ms-fontColor-white;
+  }
+
+  .hideElement  {
+    display: none;
   }
 
   .button {

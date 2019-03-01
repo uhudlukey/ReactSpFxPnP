@@ -28,6 +28,7 @@ loadTheme({
 }); */
 
 import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import styles from './ReactSpFxPnP.module.scss';
 import { IReactSpFxPnPProps } from './IReactSpFxPnPProps';
 import { TaxonomyPicker, IPickerTerms } from "@pnp/spfx-controls-react/lib/TaxonomyPicker";
@@ -56,29 +57,30 @@ export default class ReactSpFxPnP extends React.Component<IReactSpFxPnPProps, IR
     this.handleTitle = this.handleTitle.bind(this);
     this.handleDesc = this.handleDesc.bind(this);
     this._onCheckboxChange = this._onCheckboxChange.bind(this);
-    this._onRenderFooterContent = this._onRenderFooterContent.bind(this);
+    this._onRenderFooterContent =
+    this._onRenderFooterContent.bind(this);
     this.createItem = this.createItem.bind(this);
     this.onTaxPickerChange = this.onTaxPickerChange.bind(this);
     this._getManager = this._getManager.bind(this);
     this.state = {
-      name:"",
-      description:"",
+      name: "",
+      description: "",
       selectedItems: [],
       hideDialog: true,
       showPanel: false,
       dpselectedItem: undefined,
       dpselectedItems: [],  
-      disableToggle:false,
-      defaultChecked:false,
+      disableToggle: false,
+      defaultChecked: false,
       termKey: undefined,
       userIDs: [],
       userManagerIDs: [],
       pplPickerType: "",
-      status:"",
+      status: "",
       isChecked: false,
-      required:"This is required",
-      onSubmission:false,
-      termnCond:false,
+      required: "This is required",
+      onSubmission: false,
+      termnCond: false,
     }
   }
 
@@ -92,8 +94,6 @@ export default class ReactSpFxPnP extends React.Component<IReactSpFxPnPProps, IR
     return (
       <form>
         {/* TODO:
-
-          - get submit working (the buttons don't even appear?)
           - fix formatting (colours and layout of labels and input)
           - add a title 
          */}  
@@ -136,18 +136,19 @@ export default class ReactSpFxPnP extends React.Component<IReactSpFxPnPProps, IR
                   disabled={false}
                   selectedItems={this._getPeoplePickerItems} /></div>
               <div className="ms-Grid-col ms-u-sm4 block">
-                <label className="ms-Label">School or Service</label>
+                <label className="ms-Label">School or Service</label><br />
               </div>
               <div className="ms-Grid-col ms-u-sm12 block">
                 <TaxonomyPicker
                   allowMultipleSelections={false}
                   termsetNameOrID="Schools and Services"
-                  panelTitle="Select Term"
+                  panelTitle="Select School or Service"
                   label=""
                   context={this.props.context}
                   onChange={this.onTaxPickerChange}
                   isTermSetSelectable={false}
-                /></div>
+                /><p className={(this.state.termKey === undefined && this.state.onSubmission === true) ? styles.fontRed : styles.hideElement}>This is required</p>
+              </div>
               <div className="ms-Grid-col ms-u-sm4 block">
                 <label className="ms-Label">Instructed Before?</label>
               </div>
@@ -178,8 +179,7 @@ export default class ReactSpFxPnP extends React.Component<IReactSpFxPnPProps, IR
                   onText="Yes"
                   offText="No"
                   /></div>
-              <div className="ms-Grid-col ms-u-sm6 block">
-              </div>
+              <div className="ms-Grid-col ms-u-sm6 block">{/* this is just for spacing */}</div>
               <div className="ms-Grid-col ms-u-sm2 block">
                 <PrimaryButton text="Create" onClick={() => { this.validateForm(); }} />
               </div>
@@ -203,7 +203,7 @@ export default class ReactSpFxPnP extends React.Component<IReactSpFxPnPProps, IR
                 onDismiss={this._closeDialog}
                 dialogContentProps={{
                   type: DialogType.largeHeader,
-                  title: 'Request Submitted Successfully',
+                  title: 'Instruction Form Submitted Successfully',
                   subText: "" }}
                   modalProps={{
                     titleAriaId: 'myLabelId',
@@ -338,15 +338,15 @@ export default class ReactSpFxPnP extends React.Component<IReactSpFxPnPProps, IR
     this._showDialog("Submitting Request");
     console.log(this.state.termKey);
     pnp.sp.web.lists.getByTitle("Instruction Form").items.add({
-      Title: this.state.name /*,
-      Department: this.state.dpselectedItem.key,
-      Projects: {
+      Title: this.state.name,
+      School_x0020_or_x0020_Service: {
         __metadata: { "type": "SP.Taxonomy.TaxonomyFieldValue" },
         Label: "1",
         TermGuid: this.state.termKey,
         WssId: -1
-      },
-    Reporting_x0020_ManagerId: this.state.userManagerIDs[0] */
+      }
+      /* Reporting_x0020_ManagerId: this.state.userManagerIDs[0]
+      Department: this.state.dpselectedItem.key */
   }).then((iar: ItemAddResult) => {
       this.setState({ status: "Your request has been submitted sucessfully " });
   });
