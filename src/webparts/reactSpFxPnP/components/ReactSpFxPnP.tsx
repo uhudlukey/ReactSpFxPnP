@@ -61,7 +61,8 @@ export default class ReactSpFxPnP extends React.Component<IReactSpFxPnPProps, IR
     this._onRenderFooterContent.bind(this);
     this.createItem = this.createItem.bind(this);
     this.onTaxPickerChange = this.onTaxPickerChange.bind(this);
-    this._getManager = this._getManager.bind(this);
+    this._getPeoplePickerItems = this._getPeoplePickerItems.bind(this);
+    // this._getManager = this._getManager.bind(this);
     this.state = {
       name: "",
       description: "",
@@ -75,6 +76,7 @@ export default class ReactSpFxPnP extends React.Component<IReactSpFxPnPProps, IR
       termKey: undefined,
       userIDs: [],
       userManagerIDs: [],
+      formSubmitterID: [], 
       pplPickerType: "",
       status: "",
       isChecked: false,
@@ -113,16 +115,22 @@ export default class ReactSpFxPnP extends React.Component<IReactSpFxPnPProps, IR
               <div className="ms-Grid-col ms-u-sm4 block">
                 <label className="ms-Label">Submitter Name</label>
               </div>
+              {/* FIXME: this does not add the person to the column */}
               <div className="ms-Grid-col ms-u-sm8 block">
                 <PeoplePicker
                   context={this.props.context}
-                  personSelectionLimit={3}
+                  titleText=" " 
+                  personSelectionLimit={1}
                   groupName={""} // Leave this blank in case you want to filter from all users
                   showtooltip={true}
                   isRequired={true}
                   disabled={false}
-                  selectedItems={this._getPeoplePickerItems} /></div>
-              <div className="ms-Grid-col ms-u-sm4 block">
+                  selectedItems={this._getPeoplePickerItems}
+                  errorMessage={
+                  (this.state.formSubmitterID.length === 0 && this.state.onSubmission === true) ? this.state.required : " "}
+                  errorMessageClassName={styles.hideElementManager} 
+                /></div>
+              {/* <div className="ms-Grid-col ms-u-sm4 block">
                 <label className="ms-Label">Academic Lead</label>
               </div>
               <div className="ms-Grid-col ms-u-sm8 block">
@@ -134,7 +142,7 @@ export default class ReactSpFxPnP extends React.Component<IReactSpFxPnPProps, IR
                   showtooltip={true}
                   isRequired={true}
                   disabled={false}
-                  selectedItems={this._getPeoplePickerItems} /></div>
+                  selectedItems={this._getPeoplePickerItems} /></div> */}
               <div className="ms-Grid-col ms-u-sm4 block">
                 <label className="ms-Label">School or Service</label><br />
               </div>
@@ -203,7 +211,7 @@ export default class ReactSpFxPnP extends React.Component<IReactSpFxPnPProps, IR
                 onDismiss={this._closeDialog}
                 dialogContentProps={{
                   type: DialogType.largeHeader,
-                  title: 'Instruction Form Submitted Successfully',
+                  title: 'Instruction Form Submitting',
                   subText: "" }}
                   modalProps={{
                     titleAriaId: 'myLabelId',
@@ -224,7 +232,12 @@ export default class ReactSpFxPnP extends React.Component<IReactSpFxPnPProps, IR
   }
 
   private _getPeoplePickerItems(items: any[]) {
-    console.log('Items:', items);
+    this.state.formSubmitterID.length = 0;
+    for (let item in items)
+    {   
+      this.state.formSubmitterID.push(items[item].id);
+      console.log(items[item].id);
+    }
   }
 
   private onTaxPickerChange(terms : IPickerTerms) {
@@ -232,14 +245,14 @@ export default class ReactSpFxPnP extends React.Component<IReactSpFxPnPProps, IR
     console.log("Terms", terms);
   }
  
-  private _getManager(items: any[]) {
+  /* private _getManager(items: any[]) {
     this.state.userManagerIDs.length = 0;
     for (let item in items)
     {   
       this.state.userManagerIDs.push(items[item].id);
       console.log(items[item].id);
     }
-  }
+  } */
  
   private _onRenderFooterContent = (): JSX.Element => {
     return (
@@ -344,7 +357,8 @@ export default class ReactSpFxPnP extends React.Component<IReactSpFxPnPProps, IR
         Label: "1",
         TermGuid: this.state.termKey,
         WssId: -1
-      }
+      },
+      SubmitterId: this.state.formSubmitterID[0]
       /* Reporting_x0020_ManagerId: this.state.userManagerIDs[0]
       Department: this.state.dpselectedItem.key */
   }).then((iar: ItemAddResult) => {

@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Lexcel toggle
 - Submit and cancel buttons (I missed them off when I copied from the example!)
+- Managed metadata now added to list column from form
 
 ## [0.0.1] - 2019-02-28
 

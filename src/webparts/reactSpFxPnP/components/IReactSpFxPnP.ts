@@ -12,6 +12,7 @@ export interface IReactSpFxPnP {
     pplPickerType:string;
     userIDs: number[];
     userManagerIDs: number[];
+    formSubmitterID: number[];
     hideDialog: boolean;
     status: string;
     isChecked: boolean;
